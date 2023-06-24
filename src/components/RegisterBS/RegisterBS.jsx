@@ -8,7 +8,7 @@ const RegisterBS = () => {
         console.log(email, password)
     }
   return (
-    <div w-50 mx-auto>
+    <div className=" w-50 mx-auto">
       <form onSubmit={handleBSSubmit}>
         <div class="mb-3">
           <label for="exampleInputEmail1" class="form-label">
