@@ -5,25 +5,44 @@ import{createUserWithEmailAndPassword, getAuth} from 'firebase/auth'
 const auth = getAuth(app)
 
 const Register = () => {
-  const [email, setEmail] = useState("");
+  const [error, setError] = useState('');
+  const [sucess, setSucess] = useState('');
   const handleEmailChange = (event) => {
-    setEmail(event.target.value);
+    // setEmail(event.target.value);
   };
   const handlePasswordBlur = (event) => {
   };
 
   const handleSubmit = (event) =>{
     event.preventDefault();
+    setSucess('')
+    setError('');
     const email = event.target.email.value
     const Password = event.target.Password.value
    console.log(email, Password)
+   if(!/(?=.*[0-9])/.test(Password)){
+    setError('pleace add atleast one number');
+    return;
+   }
+   else if(!/(?=.*[!@#$%^&*])/.test(Password)){
+    setError('please add atleast one speacial character');
+    return ;
+   }
+   else if (Password.length<6){
+    setError('please add a six character');
+    return ;
+   }
    createUserWithEmailAndPassword(auth, email, Password)
    .then( result =>{
     const loggedIn = result.user;
+    setError('');
+    event.target.reset();
+    setSucess('user has created Successfully')
     console.log(loggedIn)
    })
    .catch(error =>{
-    console.log(error)
+    console.log(error.message)
+    setError(error.message)
    })
   }
 
@@ -37,6 +56,7 @@ const Register = () => {
           name="email"
           id="email"
           placeholder="Your Email"
+          required
         />
         <br />
         <input className="mb-4 w-50 rounded ps-2"
@@ -45,10 +65,13 @@ const Register = () => {
           name="Password"
           id="Password"
           placeholder="Your Password"
+          required
         />
         <br />
+      <p className="text-danger">{error}</p>
         <input className="btn btn-primary" type="Submit" value="register" />
       </form>
+      <p className="text-success">{sucess}</p>
     </div>
   );
 };
